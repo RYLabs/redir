@@ -28,9 +28,26 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`redir edit [FILE]`](#redir-edit-file)
 * [`redir hello [FILE]`](#redir-hello-file)
 * [`redir help [COMMAND]`](#redir-help-command)
-* [`redir run [FILE]`](#redir-run-file)
+* [`redir run NAME`](#redir-run-name)
+
+## `redir edit [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ redir edit [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/edit.ts](https://github.com/rylabs/redir/blob/v0.0.0/src/commands/edit.ts)_
 
 ## `redir hello [FILE]`
 
@@ -69,18 +86,19 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
 
-## `redir run [FILE]`
+## `redir run NAME`
 
 describe the command here
 
 ```
 USAGE
-  $ redir run [FILE]
+  $ redir run NAME
+
+ARGUMENTS
+  NAME  name of the script to run
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/run.ts](https://github.com/rylabs/redir/blob/v0.0.0/src/commands/run.ts)_

@@ -1,25 +1,31 @@
-import {Command, flags} from '@oclif/command'
+import { Command, flags } from "@oclif/command";
+import * as getStdin from "get-stdin";
+import { runScript } from "../redir";
 
 export default class Run extends Command {
-  static description = 'describe the command here'
+  static description = "Execute a redir script";
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
-  }
+    help: flags.help({ char: "h" })
+  };
 
-  static args = [{name: 'file'}]
+  static args = [
+    {
+      name: "name",
+      required: true,
+      description: "name of the script to run"
+    }
+  ];
 
   async run() {
-    const {args, flags} = this.parse(Run)
+    const { args, flags } = this.parse(Run),
 
-    const name = flags.name || 'world'
-    this.log(`hello ${name} from /Users/cyu/Projects/RYLabs/redir/src/commands/run.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
+    try {
+      const result = await runScript(args.name, input);
+      this.log(result);
+    } catch (err) {
+      this.error(`Error running command \`${args.name}\`: ${err.message}`);
+      this.exit(1);
     }
   }
 }
