@@ -41,7 +41,7 @@ export default class Script {
   }
 
   async createVM(data: any, content: string, context: any): any {
-    const sandbox = { moment, ...context };
+    const sandbox = { moment, _, ...context };
 
     if ("netrc" in data) {
       const logins = _.flatten([data.netrc]),
