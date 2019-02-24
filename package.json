@@ -13,6 +13,11 @@
     "@oclif/plugin-help": "^2",
     "debug": "^4.1.1",
     "get-stdin": "^6.0.0",
+    "gray-matter": "^4.0.2",
+    "lodash": "^4.17.11",
+    "moment-timezone": "^0.5.23",
+    "netrc": "^0.1.4",
+    "node-fetch": "^2.3.0",
     "tslib": "^1"
   },
   "devDependencies": {
