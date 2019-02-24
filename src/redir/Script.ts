@@ -5,6 +5,7 @@ import * as moment from "moment-timezone";
 import * as matter from "gray-matter";
 import * as _ from "lodash";
 import * as netrc from "netrc";
+import fetch from "./fetch";
 
 const debug = log("redir:Script");
 
@@ -15,18 +16,25 @@ export default class Script {
   }
 
   async run(input): string {
+    debug("running script:", this.name);
+    const { data, content } = await this.loadScript();
+    debug("script metadata:", data);
+
     debug("creating vm...");
-    const [vm, inputString] = await Promise.all([this.createVM(), input]);
-    if ("handle" in vm) {
-      debug("handling input:", inputString);
-      return await vm.handle(inputString);
-    } else {
+    const [vm, inputString] = await Promise.all([this.createVM(data), input]);
+
+    if (!("handle" in vm)) {
       debug("missing handle method!");
       throw new Error("Expecting handle(input) method in script");
     }
 
-    debug("data:", data);
-    return content;
+    debug("handling input:", inputString);
+    let result = await vm.handle(inputString);
+    if (data.fetch === true) {
+      debug("running fetch on initial result:", result);
+      result = await fetch(result);
+    }
+    return result;
   }
 
   async createVM(): any {

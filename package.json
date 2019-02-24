@@ -11,6 +11,7 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
+    "bluebird": "^3.5.3",
     "debug": "^4.1.1",
     "get-stdin": "^6.0.0",
     "gray-matter": "^4.0.2",

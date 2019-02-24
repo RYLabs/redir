@@ -1,5 +1,6 @@
 import { Command, flags } from "@oclif/command";
 import * as getStdin from "get-stdin";
+import * as Promise from "bluebird";
 import { runScript } from "../redir";
 import fetch from "../redir/fetch";
 
@@ -19,12 +20,18 @@ export default class Run extends Command {
     }
   ];
 
+  static strict = false;
+
   async run() {
-    const { args, flags } = this.parse(Run),
+    const { args, argv, flags } = this.parse(Run),
       input = getStdin();
 
     try {
-      let result = await runScript(args.name, input);
+      let result = await Promise.reduce(
+        argv,
+        (input, name) => runScript(name, Promise.resolve(input)),
+        input
+      );
       if (flags.fetch) {
         result = await fetch(result);
       }
