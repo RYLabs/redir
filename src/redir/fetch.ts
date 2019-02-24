@@ -9,16 +9,23 @@ function base64Encode(str) {
   return Buffer.from(str).toString("base64");
 }
 
+function addHeader(request, name, value) {
+  if (!("headers" in request)) {
+    request.headers = {};
+  }
+  request.headers[name] = value;
+}
+
 function addAuthentication(request, auth) {
-  const { basic } = auth;
+  const { basic, bearer } = auth;
 
   if (basic) {
     const { login, password } = basic;
-    if (!("headers" in request)) {
-      request.headers = {};
-    }
     const authString = base64Encode([login, password].join(":"));
-    request.headers["Authorization"] = `Basic ${authString}`;
+    addHeader(request, "Authorization", `Basic ${authString}`);
+
+  } else if (bearer) {
+    addHeader(request, "Authorization", `Bearer ${bearer}`);
   }
 }
 

@@ -15,13 +15,16 @@ export default class Script {
     this.file = file;
   }
 
-  async run(input): string {
+  async run(input: Promise<any>, context: any): string {
     debug("running script:", this.name);
     const { data, content } = await this.loadScript();
     debug("script metadata:", data);
 
     debug("creating vm...");
-    const [vm, inputString] = await Promise.all([this.createVM(data), input]);
+    const [vm, inputString] = await Promise.all([
+      this.createVM(data, content, context),
+      input
+    ]);
 
     if (!("handle" in vm)) {
       debug("missing handle method!");
@@ -37,9 +40,8 @@ export default class Script {
     return result;
   }
 
-  async createVM(): any {
-    const { data, content } = await this.loadScript(),
-      sandbox = { moment };
+  async createVM(data: any, content: string, context: any): any {
+    const sandbox = { moment, ...context };
 
     if ("netrc" in data) {
       const logins = _.flatten([data.netrc]),
@@ -62,7 +64,7 @@ export default class Script {
 
   async loadScript(): any {
     return await matter.read(this.file, {
-      delims: ["/* ----", "---- */"]
+      delims: ["/* ---", "--- */"]
     });
   }
 }

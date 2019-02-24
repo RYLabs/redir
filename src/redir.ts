@@ -1,9 +1,13 @@
 import * as fs from "fs";
 import { findScript, localScriptsDir } from "./redir/ScriptLocator";
 
-export async function runScript(name: string, input: string): string {
+export async function runScript(
+  name: any,
+  input: Promise<any>,
+  context: any
+): string {
   const script = await findScript(name);
-  return await script.run(input);
+  return await script.run(input, context);
 }
 
 export function ensureProject() {
