@@ -6,6 +6,7 @@ import * as matter from "gray-matter";
 import * as _ from "lodash";
 import * as netrc from "netrc";
 import fetch from "./fetch";
+import PipelineBuilder from "./PipelineBuilder";
 
 const debug = log("redir:Script");
 
@@ -17,27 +18,43 @@ export default class Script {
 
   async run(input: Promise<any>, context: any): string {
     debug("running script:", this.name);
-    const { data, content } = await this.loadScript();
+
+    const { data, content } = await this.loadScript(),
+      builder = new PipelineBuilder();
+
     debug("script metadata:", data);
 
-    debug("creating vm...");
-    const [vm, inputString] = await Promise.all([
-      this.createVM(data, content, context),
-      input
-    ]);
-
-    if (!("handle" in vm)) {
-      debug("missing handle method!");
-      throw new Error("Expecting handle(input) method in script");
+    if ('prerequisites' in data) {
+      builder.startStage();
+      for (let prereq of data.prerequisites) {
+        builder.addScript(prereq);
+      }
     }
 
-    debug("handling input:", inputString);
-    let result = await vm.handle(inputString);
-    if (data.fetch === true) {
-      debug("running fetch on initial result:", result);
-      result = await fetch(result);
-    }
-    return result;
+    builder.startStage();
+    builder.addRedir(this.name, async (input, context) => {
+      debug("creating vm...");
+      const [vm, inputString] = await Promise.all([
+        this.createVM(data, content, context),
+        input
+      ]);
+
+      if (!("handle" in vm)) {
+        debug("missing handle method!");
+        throw new Error("Expecting handle(input) method in script");
+      }
+
+      debug("handling input:", inputString);
+      let result = await vm.handle(inputString);
+      if (data.fetch === true) {
+        debug("running fetch on initial result:", result);
+        result = await fetch(result);
+      }
+      return result;
+    });
+
+    const pipeline = builder.build();
+    return pipeline.run(input, context);
   }
 
   async createVM(data: any, content: string, context: any): any {
