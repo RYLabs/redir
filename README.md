@@ -28,23 +28,25 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`redir edit [FILE]`](#redir-edit-file)
+* [`redir edit NAME`](#redir-edit-name)
 * [`redir hello [FILE]`](#redir-hello-file)
 * [`redir help [COMMAND]`](#redir-help-command)
 * [`redir run NAME`](#redir-run-name)
+* [`redir scripts [FILE]`](#redir-scripts-file)
 
-## `redir edit [FILE]`
+## `redir edit NAME`
 
-describe the command here
+Edit a redir script
 
 ```
 USAGE
-  $ redir edit [FILE]
+  $ redir edit NAME
+
+ARGUMENTS
+  NAME  name of the script
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/edit.ts](https://github.com/rylabs/redir/blob/v0.0.0/src/commands/edit.ts)_
@@ -88,7 +90,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6
 
 ## `redir run NAME`
 
-describe the command here
+Execute a redir script
 
 ```
 USAGE
@@ -99,7 +101,24 @@ ARGUMENTS
 
 OPTIONS
   -h, --help  show CLI help
+  --fetch     Pass result to fetch
 ```
 
 _See code: [src/commands/run.ts](https://github.com/rylabs/redir/blob/v0.0.0/src/commands/run.ts)_
+
+## `redir scripts [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ redir scripts [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/scripts.ts](https://github.com/rylabs/redir/blob/v0.0.0/src/commands/scripts.ts)_
 <!-- commandsstop -->
